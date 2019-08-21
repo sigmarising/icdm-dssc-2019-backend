@@ -47,5 +47,4 @@ def service_knowledge_graph(text):
     :param text: input text
     :return: json dict
     """
-    print(text_2_echarts_data_json_str(text))
     return text_2_echarts_data_json(text)

@@ -56,16 +56,24 @@ def triple_list_2_echarts_data_json(triple: list) -> dict:
     communities = None
     for communities_iter in limited:
         communities = tuple(sorted(c) for c in communities_iter)
-    for index, community in enumerate(communities, 1):
-        label = "category" + str(index)
-        for node in community:
-            graph.nodes[node]["category"] = label
 
     # generate json string
     echarts_json = {
         "nodes": [],
-        "edges": []
+        "edges": [],
+        "categories": []
     }
+
+    # fill in categories and nodes's info
+    for index, community in enumerate(communities, 1):
+        label = "category" + str(index)
+        echarts_json["categories"].append({
+            "name": label
+        })
+        for node in community:
+            graph.nodes[node]["category"] = label
+
+    # fill in nodes info
     for node, attr in graph.nodes.items():
         echarts_json["nodes"].append({
             "name": node,
@@ -73,6 +81,8 @@ def triple_list_2_echarts_data_json(triple: list) -> dict:
             "category": attr["category"],
             "symbolSize": attr["pageRank"]
         })
+
+    # fill in edges info
     for edge, attr in graph.edges.items():
         echarts_json["edges"].append({
             "source": edge[0],
