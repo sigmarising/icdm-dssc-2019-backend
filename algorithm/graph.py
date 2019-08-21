@@ -1,5 +1,5 @@
-import json
 import math
+import json
 import itertools
 import networkx as nx
 
@@ -22,11 +22,11 @@ def text_2_triple_list(text: str) -> list:
     pass
 
 
-def triple_list_2_echarts_data_json_str(triple: list) -> str:
+def triple_list_2_echarts_data_json(triple: list) -> dict:
     """
     input the triple list and convert it to echarts data json str (using networkX)
     :param triple: the triple list
-    :return: the json string
+    :return: the json dict
     """
     graph = nx.Graph()
 
@@ -81,14 +81,24 @@ def triple_list_2_echarts_data_json_str(triple: list) -> str:
                 "formatter": attr["relation"]
             }
         })
-    return json.dumps(echarts_json, ensure_ascii=False)
+    return echarts_json
 
 
-def text_2_echarts_data_json_str(text: str) -> str:
+def triple_list_2_echarts_data_json_str(triple: list) -> str:
+    """
+    input the triple list and convert it to echarts data json str (using networkX)
+    :param triple: the triple list
+    :return: the json str
+    """
+    json_dict = triple_list_2_echarts_data_json(triple)
+    return json.dumps(json_dict, ensure_ascii=False)
+
+
+def text_2_echarts_data_json(text: str) -> dict:
     """
     convert text to echarts data json str
     :param text: input text
-    :return: json str
+    :return: json dict
     """
     # triple_list = text_2_triple_list(text)
     triple_list = [
@@ -133,4 +143,13 @@ def text_2_echarts_data_json_str(text: str) -> str:
             "relation": "at"
         }
     ]
-    return triple_list_2_echarts_data_json_str(triple_list)
+    return triple_list_2_echarts_data_json(triple_list)
+
+
+def text_2_echarts_data_json_str(text: str) -> str:
+    """
+    convert text to echarts data json str
+    :param text: input text
+    :return: json str
+    """
+    return json.dumps(text_2_echarts_data_json(text), ensure_ascii=False)

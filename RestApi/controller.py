@@ -34,7 +34,7 @@ def knowledge_graph(request):
     """
     ctrl for text 2 knowledge graph
     :param request: request
-    :return: json str
+    :return: json dict
     """
     if request.method != "GET":
         return HttpResponseBadRequest("This http method is not allowed!")

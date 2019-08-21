@@ -60,7 +60,10 @@ Get the sepecific article's content and knowledge graph (in echarts' data json s
 ```json
 {
     "content": "BYD debuted its E-SEED GT concept car and Song Pro SUV alongside its all-new e-series models at the Shanghai International Automobile Industry Exhibition. ",
-    "graph": ""
+    "graph": {
+        "nodes": [],
+        "edges": []
+    }
 }
 ```
 
@@ -86,7 +89,10 @@ Get the Knowledge Graph of the sepecific text.
 
 ```json
 {
-    "graph": ""
+    "graph": {
+        "nodes": [],
+        "edges": []
+    }
 }
 ```
 

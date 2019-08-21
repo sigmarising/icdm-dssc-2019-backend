@@ -1,6 +1,7 @@
+import json
 from django.db import transaction
 from . import models
-from algorithm.graph import text_2_echarts_data_json_str
+from algorithm.graph import *
 
 
 def service_article_list():
@@ -36,14 +37,15 @@ def service_article_info(category, identity):
     }
     if info.exists():
         res["content"] = info[0]["content"]
-        res["graph"] = info[0]["graph"]
+        res["graph"] = json.loads(info[0]["graph"].strip(), encoding='utf-8')
     return res
 
 
 def service_knowledge_graph(text):
     """
-    service for convert text to knowledge graph (in json str)
+    service for convert text to knowledge graph (in json dict)
     :param text: input text
-    :return: json string
+    :return: json dict
     """
-    return text_2_echarts_data_json_str(text)
+    print(text_2_echarts_data_json_str(text))
+    return text_2_echarts_data_json(text)
