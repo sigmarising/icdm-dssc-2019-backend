@@ -22,9 +22,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'dn$e+mwb7qba@eatcywnio5ql68&$k$=b_4t5xbhbxzu2yp9!6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+# DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+# ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 # USE MEM CACHE
 CACHES = {
@@ -86,6 +88,7 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD': 'Aa123456',
         'HOST': '39.98.186.125',
+        # 'HOST': 'localhost',
         'PORT': '3306',
     }
 }

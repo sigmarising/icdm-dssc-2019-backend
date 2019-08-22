@@ -1,0 +1,8 @@
+decorator==4.4.0
+Django==2.2.4
+mysqlclient==1.4.4
+networkx==2.3
+numpy==1.17.0
+python-louvain==0.13
+pytz==2019.2
+sqlparse==0.3.0

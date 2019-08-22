@@ -1,6 +1,5 @@
-import math
 import json
-import itertools
+import community as c
 import networkx as nx
 
 
@@ -28,7 +27,15 @@ def triple_list_2_echarts_data_json(triple: list) -> dict:
     :param triple: the triple list
     :return: the json dict
     """
-    graph = nx.Graph()
+    # generate json string
+    echarts_json = {
+        "nodes": [],
+        "edges": [],
+        "categories": []
+    }
+
+    # we support DiGraph in the beginning
+    graph = nx.DiGraph()
 
     # add nodes and edges
     for item in triple:
@@ -50,28 +57,29 @@ def triple_list_2_echarts_data_json(triple: list) -> dict:
         graph.nodes[k]["degree"] = graph.degree[k]
 
     # communities of nodes
-    k = math.floor(math.log2(len(graph.nodes))) + 1  # the triple has at least 2 node, so k >= 2
-    comp = nx.algorithms.community.girvan_newman(graph)
-    limited = itertools.takewhile(lambda c: len(c) <= k, comp)
-    communities = None
-    for communities_iter in limited:
-        communities = tuple(sorted(c) for c in communities_iter)
+    communities = c.best_partition(nx.Graph(graph))
+    for node, community in communities.items():
+        graph.nodes[node]["category"] = "category" + str(community + 1)
 
-    # generate json string
-    echarts_json = {
-        "nodes": [],
-        "edges": [],
-        "categories": []
-    }
-
-    # fill in categories and nodes's info
-    for index, community in enumerate(communities, 1):
-        label = "category" + str(index)
+    for index in list(set(communities.values())):
         echarts_json["categories"].append({
-            "name": label
+            "name": "category" + str(index + 1)
         })
-        for node in community:
-            graph.nodes[node]["category"] = label
+
+    # k = math.floor(math.log2(len(graph.nodes))) + 1  # the triple has at least 2 node, so k >= 2
+    # comp = nx.algorithms.community.girvan_newman(graph)
+    # limited = itertools.takewhile(lambda c: len(c) <= k, comp)
+    # communities = None
+    # for communities_iter in limited:
+    #     communities = tuple(sorted(c) for c in communities_iter)
+    # fill in categories and nodes's info
+    # for index, community in enumerate(communities, 1):
+    #     label = "category" + str(index)
+    #     echarts_json["categories"].append({
+    #         "name": label
+    #     })
+    #     for node in community:
+    #         graph.nodes[node]["category"] = label
 
     # fill in nodes info
     for node, attr in graph.nodes.items():
