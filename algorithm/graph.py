@@ -1,24 +1,25 @@
 import json
 import community as c
 import networkx as nx
+from .func import text_2_triple_list
 
 
-def text_2_triple_list(text: str) -> list:
-    """
-    input the text and return the knowledge graph triple (in list)
-    :param text: A Text String
-    :return:
-        the Triple list of Knowledge Graph
-        one possible example:
-        [
-            {
-                "source": "car",
-                "target": "store",
-                "relation": "at"
-            },
-        ]
-    """
-    pass
+# def text_2_triple_list(text: str) -> list:
+#     """
+#     input the text and return the knowledge graph triple (in list)
+#     :param text: A Text String
+#     :return:
+#         the Triple list of Knowledge Graph
+#         one possible example:
+#         [
+#             {
+#                 "source": "car",
+#                 "target": "store",
+#                 "relation": "at"
+#             },
+#         ]
+#     """
+#     pass
 
 
 def triple_list_2_echarts_data_json(triple: list) -> dict:
@@ -104,7 +105,6 @@ def text_2_echarts_data_json(text: str) -> dict:
     :param text: input text
     :return: json dict
     """
-    # triple_list = text_2_triple_list(text)
     triple_list = [
         {
             "source": "a",
@@ -147,6 +147,7 @@ def text_2_echarts_data_json(text: str) -> dict:
             "relation": "at"
         }
     ]
+    triple_list = text_2_triple_list(text)
     return triple_list_2_echarts_data_json(triple_list)
 
 
