@@ -61,25 +61,11 @@ def triple_list_2_echarts_data_json(triple: list) -> dict:
     for node, community in communities.items():
         graph.nodes[node]["category"] = "category" + str(community + 1)
 
+    # fill in categories
     for index in list(set(communities.values())):
         echarts_json["categories"].append({
             "name": "category" + str(index + 1)
         })
-
-    # k = math.floor(math.log2(len(graph.nodes))) + 1  # the triple has at least 2 node, so k >= 2
-    # comp = nx.algorithms.community.girvan_newman(graph)
-    # limited = itertools.takewhile(lambda c: len(c) <= k, comp)
-    # communities = None
-    # for communities_iter in limited:
-    #     communities = tuple(sorted(c) for c in communities_iter)
-    # fill in categories and nodes's info
-    # for index, community in enumerate(communities, 1):
-    #     label = "category" + str(index)
-    #     echarts_json["categories"].append({
-    #         "name": label
-    #     })
-    #     for node in community:
-    #         graph.nodes[node]["category"] = label
 
     # fill in nodes info
     for node, attr in graph.nodes.items():
