@@ -29,6 +29,7 @@ def main():
 
     # delete origin data
     execute_sql(db, cursor, "DELETE FROM article")
+    print("DELETE ORIGIN DATA")
 
     data = pd.read_csv(DATASET_PATH)
     for index, row in data.iterrows():
@@ -38,35 +39,37 @@ def main():
             "content": str(row["content"])
         }
 
-        print("Computing " + data_item["industry"] + ":" + data_item["index"])
+        print("Computing - " + data_item["industry"] + ":" + data_item["index"] + " ", end="")
 
         graph_weak_et = text_2_echarts_data_json_str(data_item["content"], 1, 1)
+        print(" 11 ", end="")
         graph_medium_et = text_2_echarts_data_json_str(data_item["content"], 2, 1)
+        print(" 21 ", end="")
         graph_strong_et = text_2_echarts_data_json_str(data_item["content"], 3, 1)
+        print(" 31 ", end="")
         graph_weak_cd = text_2_echarts_data_json_str(data_item["content"], 1, 2)
+        print(" 12 ", end="")
         graph_medium_cd = text_2_echarts_data_json_str(data_item["content"], 2, 2)
+        print(" 22 ", end="")
         graph_strong_cd = text_2_echarts_data_json_str(data_item["content"], 3, 2)
-
-        print("Exec SQL " + data_item["industry"] + ":" + data_item["index"])
+        print(" 32 ")
 
         insert_sql = """INSERT INTO article(category, identity, content,
                 graphWeakEt, graphMediumEt, graphStrongEt,
                 graphWeakCd, graphMediumCd, graphStrongCd,)
-                VALUES(`{0}`, `{1}`, `{2}`,
-                    `{3}`, `{4}`, `{5}`,
-                    `{6}`, `{7}`, `{8}`)               
+                VALUES('{0}', '{1}', '{2}',
+                    '{3}', '{4}', '{5}',
+                    '{6}', '{7}', '{8}')               
             """.format(
             data_item["industry"], data_item["index"], data_item["content"],
             graph_weak_et, graph_medium_et, graph_strong_et,
             graph_weak_cd, graph_medium_cd, graph_strong_cd
         )
-        print(insert_sql)
         execute_sql(
             db,
             cursor,
             insert_sql
         )
-
         print("DONE " + data_item["industry"] + ":" + data_item["index"])
 
     # disconnect from db
