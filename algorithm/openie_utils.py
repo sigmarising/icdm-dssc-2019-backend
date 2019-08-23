@@ -222,7 +222,7 @@ def remove_duplicate_triples(triples):
 
 
 def check_triples_by_pos(triples):
-    pos_tagger = CoreNLPParser(url='http://localhost:9000', tagtype='pos')
+    pos_tagger = CoreNLPParser(url='http://39.98.186.125:9000', tagtype='pos')
     ret_triples = []
     for triple in triples:
         source = triple[0]

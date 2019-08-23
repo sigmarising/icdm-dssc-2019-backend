@@ -8,9 +8,9 @@ import neuralcoref
 def text_2_triple_list(text, strength):
     nlp = spacy.load("en")
     neuralcoref.add_to_pipe(nlp)
-    api = CoreNLPParser(url='http://localhost:9000')
+    api = CoreNLPParser(url='http://39.98.186.125:9000')
     api.parser_annotator = "tokenize,ssplit,coref,openie"
-    parser = CoreNLPParser(url='http://localhost:9000')
+    parser = CoreNLPParser(url='http://39.98.186.125:9000')
 
     text = clean_text(text)
     text = remove_adjective_possessive_pronoun(text)
@@ -34,7 +34,7 @@ def text_2_triple_list(text, strength):
     triples = filter_triples_by_entities(triples, entities, strength)
     triples = beautify_triples(triples)
     triples = remove_meaningless_triples(triples)
-    triples = remove_duplicate_triples(triples)
     triples = check_triples_by_pos(triples)
+    triples = remove_duplicate_triples(triples)
 
     return generate_structured_triples(triples, entities, entities_labels)
