@@ -67,9 +67,15 @@ def main():
             cursor,
             insert_sql,
             (
-                data_item["industry"], data_item["index"], data_item["content"],
-                graph_weak_et, graph_medium_et, graph_strong_et,
-                graph_weak_cd, graph_medium_cd, graph_strong_cd
+                pymysql.escape_string(data_item["industry"]),
+                pymysql.escape_string(data_item["index"]),
+                pymysql.escape_string(data_item["content"]),
+                pymysql.escape_string(graph_weak_et),
+                pymysql.escape_string(graph_medium_et),
+                pymysql.escape_string(graph_strong_et),
+                pymysql.escape_string(graph_weak_cd),
+                pymysql.escape_string(graph_medium_cd),
+                pymysql.escape_string(graph_strong_cd)
             )
         )
         print("DONE " + data_item["industry"] + ":" + data_item["index"])
