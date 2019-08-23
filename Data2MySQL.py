@@ -12,6 +12,7 @@ def execute_sql(db, cursor, sql):
     except Exception as e:
         print(e)
         db.rollback()
+        exit(1)
 
 
 def main():
@@ -36,29 +37,36 @@ def main():
             "index": str(row["index"]),
             "content": str(row["content"])
         }
+
         print("Computing " + data_item["industry"] + ":" + data_item["index"])
+
         graph_weak_et = text_2_echarts_data_json_str(data_item["content"], 1, 1)
         graph_medium_et = text_2_echarts_data_json_str(data_item["content"], 2, 1)
         graph_strong_et = text_2_echarts_data_json_str(data_item["content"], 3, 1)
         graph_weak_cd = text_2_echarts_data_json_str(data_item["content"], 1, 2)
         graph_medium_cd = text_2_echarts_data_json_str(data_item["content"], 2, 2)
         graph_strong_cd = text_2_echarts_data_json_str(data_item["content"], 3, 2)
+
         print("Exec SQL " + data_item["industry"] + ":" + data_item["index"])
-        execute_sql(
-            db,
-            cursor,
-            """INSERT INTO article(category, identity, content,
+
+        insert_sql = """INSERT INTO article(category, identity, content,
                 graphWeakEt, graphMediumEt, graphStrongEt,
                 graphWeakCd, graphMediumCd, graphStrongCd,)
                 VALUES(`{0}`, `{1}`, `{2}`,
                     `{3}`, `{4}`, `{5}`,
                     `{6}`, `{7}`, `{8}`)               
             """.format(
-                data_item["industry"], data_item["index"], data_item["content"],
-                graph_weak_et, graph_medium_et, graph_strong_et,
-                graph_weak_cd, graph_medium_cd, graph_strong_cd
-            )
+            data_item["industry"], data_item["index"], data_item["content"],
+            graph_weak_et, graph_medium_et, graph_strong_et,
+            graph_weak_cd, graph_medium_cd, graph_strong_cd
         )
+        print(insert_sql)
+        execute_sql(
+            db,
+            cursor,
+            insert_sql
+        )
+
         print("DONE " + data_item["industry"] + ":" + data_item["index"])
 
     # disconnect from db
