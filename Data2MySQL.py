@@ -54,12 +54,12 @@ def main():
         graph_strong_cd = text_2_echarts_data_json_str(data_item["content"], 3, 2)
         print(" 32 ")
 
-        insert_sql = """INSERT INTO article(category, identity, content,
-                graphWeakEt, graphMediumEt, graphStrongEt,
-                graphWeakCd, graphMediumCd, graphStrongCd,)
-                VALUES('{0}', '{1}', '{2}',
-                    '{3}', '{4}', '{5}',
-                    '{6}', '{7}', '{8}')               
+        insert_sql = """INSERT INTO article(`category`, `identity`, `content`,
+                `graphWeakEt`, `graphMediumEt`, `graphStrongEt`,
+                `graphWeakCd`, `graphMediumCd`, `graphStrongCd`,)
+                VALUES(`{0}`, `{1}`, `{2}`,
+                    `{3}`, `{4}`, `{5}`,
+                    `{6}`, `{7}`, `{8}`)               
             """.format(
             data_item["industry"], data_item["index"], data_item["content"],
             graph_weak_et, graph_medium_et, graph_strong_et,
