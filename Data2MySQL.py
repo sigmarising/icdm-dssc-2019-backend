@@ -5,9 +5,12 @@ import pymysql
 DATASET_PATH = './dataset/icdm_contest_data.csv'
 
 
-def execute_sql(db, cursor, sql):
+def execute_sql(db, cursor, sql, q=None):
     try:
-        cursor.execute(sql)
+        if q:
+            cursor.execute(sql, q)
+        else:
+            cursor.execute(sql)
         db.commit()
     except Exception as e:
         print(e)
@@ -54,21 +57,20 @@ def main():
         graph_strong_cd = text_2_echarts_data_json_str(data_item["content"], 3, 2)
         print(" 32 ")
 
-        insert_sql = """INSERT INTO article(`category`, `identity`, `content`,
+        insert_sql = """INSERT INTO `article`(`category`, `identity`, `content`,
                 `graphWeakEt`, `graphMediumEt`, `graphStrongEt`,
                 `graphWeakCd`, `graphMediumCd`, `graphStrongCd`,)
-                VALUES('{0}', '{1}', '{2}',
-                    '{3}', '{4}', '{5}',
-                    '{6}', '{7}', '{8}')               
-            """.format(
-            data_item["industry"], data_item["index"], "content",
-            graph_weak_et, graph_medium_et, graph_strong_et,
-            graph_weak_cd, graph_medium_cd, graph_strong_cd
-        )
+                VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)               
+            """
         execute_sql(
             db,
             cursor,
-            insert_sql
+            insert_sql,
+            (
+                data_item["industry"], data_item["index"], data_item["content"],
+                graph_weak_et, graph_medium_et, graph_strong_et,
+                graph_weak_cd, graph_medium_cd, graph_strong_cd
+            )
         )
         print("DONE " + data_item["industry"] + ":" + data_item["index"])
 
