@@ -1,36 +1,34 @@
 import json
 import community as c
 import networkx as nx
+from .func import text_2_triple_list
 
 
-# from .func import text_2_triple_list
-
-
-def text_2_triple_list(text: str, strength: int) -> list:
-    """
-    input the text and return the knowledge graph triple (in list)
-    :param text:
-        A Text String to Analysis with UTF-8 charset
-    :param strength:
-        support three strength:
-            1: weak
-            2: medium
-            3: strong
-    :return:
-        the Triple list of Knowledge Graph
-        (with two additional entity type, none should be 'default')
-        one possible example:
-        [
-            {
-                "source": "car",
-                "sourceType": "default",
-                "target": "store",
-                "targetType": "name"
-                "relation": "at",
-            },
-        ]
-    """
-    pass
+# def text_2_triple_list(text: str, strength: int) -> list:
+#     """
+#     input the text and return the knowledge graph triple (in list)
+#     :param text:
+#         A Text String to Analysis with UTF-8 charset
+#     :param strength:
+#         support three strength:
+#             1: weak
+#             2: medium
+#             3: strong
+#     :return:
+#         the Triple list of Knowledge Graph
+#         (with two additional entity type, none should be 'default')
+#         one possible example:
+#         [
+#             {
+#                 "source": "car",
+#                 "sourceType": "default",
+#                 "target": "store",
+#                 "targetType": "name"
+#                 "relation": "at",
+#             },
+#         ]
+#     """
+#     pass
 
 
 def triple_list_2_echarts_data_json(triple: list, category: int) -> dict:
