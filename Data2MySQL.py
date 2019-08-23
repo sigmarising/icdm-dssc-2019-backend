@@ -57,11 +57,11 @@ def main():
         insert_sql = """INSERT INTO article(`category`, `identity`, `content`,
                 `graphWeakEt`, `graphMediumEt`, `graphStrongEt`,
                 `graphWeakCd`, `graphMediumCd`, `graphStrongCd`,)
-                VALUES(`{0}`, `{1}`, `{2}`,
-                    `{3}`, `{4}`, `{5}`,
-                    `{6}`, `{7}`, `{8}`)               
+                VALUES('{0}', '{1}', '{2}',
+                    '{3}', '{4}', '{5}',
+                    '{6}', '{7}', '{8}')               
             """.format(
-            data_item["industry"], data_item["index"], data_item["content"],
+            data_item["industry"], data_item["index"], "content",
             graph_weak_et, graph_medium_et, graph_strong_et,
             graph_weak_cd, graph_medium_cd, graph_strong_cd
         )
