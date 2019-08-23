@@ -60,7 +60,7 @@ def main():
         insert_sql = \
             "INSERT INTO `article`(`category`, `identity`, `content`," \
             "`graphWeakEt`, `graphMediumEt`, `graphStrongEt`," \
-            "`graphWeakCd`, `graphMediumCd`, `graphStrongCd`,)" \
+            "`graphWeakCd`, `graphMediumCd`, `graphStrongCd`)" \
             "VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)"
         execute_sql(
             db,
