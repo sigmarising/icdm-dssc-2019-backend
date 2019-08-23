@@ -22,29 +22,66 @@ def service_article_list():
     return res
 
 
-def service_article_info(category, identity):
+def service_article_info(category, identity, strength, category_methond):
     """
     find the article info in db
-    :param category: category
-    :param identity: category
+    :param category: industry
+    :param identity: id
+    :param strength:
+        convert str config to int:
+            Weak: 1
+            Medium: 2
+            Strong: 3
+    :param category_methond:
+        convert str config to int
+            Entity Category: 1
+            Communities Detection: 2
     :return: content and graph
     """
+    lookup_str = 'graph' + strength
+    if category_methond == 'Entity Category':
+        lookup_str += 'Et'
+    elif category_methond == 'Communities Detection':
+        lookup_str += 'Cd'
+
     with transaction.atomic():
-        info = models.Article.objects.filter(category=category, identity=identity).values('content', 'graph')
+        info = models.Article.objects.filter(category=category, identity=identity).values('content', lookup_str)
     res = {
         "content": "",
         "graph": ""
     }
     if info.exists():
         res["content"] = info[0]["content"]
-        res["graph"] = json.loads(info[0]["graph"].strip(), encoding='utf-8')
+        res["graph"] = json.loads(info[0][lookup_str].strip(), encoding='utf-8')
     return res
 
 
-def service_knowledge_graph(text):
+def service_knowledge_graph(text, strength, category_methond):
     """
     service for convert text to knowledge graph (in json dict)
     :param text: input text
+    :param strength:
+        convert str config to int:
+            Weak: 1
+            Medium: 2
+            Strong: 3
+    :param category_methond:
+        convert str config to int
+            Entity Category: 1
+            Communities Detection: 2
     :return: json dict
     """
-    return text_2_echarts_data_json(text)
+    param_strength, param_category = 0, 0
+    if strength == "Weak":
+        param_strength = 1
+    elif strength == "Medium":
+        param_strength = 2
+    elif strength == 'Strong':
+        param_strength = 3
+
+    if category_methond == "Entity Category":
+        param_category = 1
+    elif category_methond == "Communities Detection":
+        param_category = 2
+
+    return text_2_echarts_data_json(text, param_strength, param_category)

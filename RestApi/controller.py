@@ -26,10 +26,15 @@ def article_info(request):
     if request.method != "GET":
         return HttpResponseBadRequest("This http method is not allowed!")
     else:
-        return JsonResponse(service.service_article_info(request.GET['category'], request.GET['identity']))
+        return JsonResponse(service.service_article_info(
+            request.GET['category'],
+            request.GET['identity'],
+            request.GET['strength'],
+            request.GET['categoryType']
+        ))
 
 
-@cache_page(60 * 60 * 24)
+@cache_page(60 * 5)
 def knowledge_graph(request):
     """
     ctrl for text 2 knowledge graph
@@ -40,5 +45,9 @@ def knowledge_graph(request):
         return HttpResponseBadRequest("This http method is not allowed!")
     else:
         return JsonResponse({
-            "graph": service.service_knowledge_graph(request.GET["text"])
+            "graph": service.service_knowledge_graph(
+                request.GET["text"],
+                request.GET['strength'],
+                request.GET['category']
+            )
         })
