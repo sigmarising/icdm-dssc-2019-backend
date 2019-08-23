@@ -57,11 +57,11 @@ def main():
         graph_strong_cd = text_2_echarts_data_json_str(data_item["content"], 3, 2)
         print(" 32 ")
 
-        insert_sql = """INSERT INTO `article`(`category`, `identity`, `content`,
-                `graphWeakEt`, `graphMediumEt`, `graphStrongEt`,
-                `graphWeakCd`, `graphMediumCd`, `graphStrongCd`,)
-                VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)               
-            """
+        insert_sql = \
+            "INSERT INTO `article`(`category`, `identity`, `content`," \
+            "`graphWeakEt`, `graphMediumEt`, `graphStrongEt`," \
+            "`graphWeakCd`, `graphMediumCd`, `graphStrongCd`,)" \
+            "VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)"
         execute_sql(
             db,
             cursor,
