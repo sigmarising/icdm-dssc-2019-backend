@@ -43,6 +43,7 @@ def service_article_info(category, identity, strength, category_methond):
         lookup_str += 'Et'
     elif category_methond == 'Communities Detection':
         lookup_str += 'Cd'
+    lookup_str = lookup_str.lower()
 
     with transaction.atomic():
         info = models.Article.objects.filter(category=category, identity=identity).values('content', lookup_str)
