@@ -1,9 +1,9 @@
 from django.http import JsonResponse, HttpResponseBadRequest
-from django.views.decorators.cache import cache_control, cache_page
+from django.views.decorators.cache import cache_page
 from . import service
 
 
-@cache_page(60 * 60 * 24)
+@cache_page(60 * 60 * 24 * 7)
 def article_list_map(request):
     """
     ctrl for all article list
@@ -29,12 +29,11 @@ def article_info(request):
         return JsonResponse(service.service_article_info(
             request.GET['category'],
             request.GET['identity'],
-            request.GET['strength'],
-            request.GET['categoryType']
+            request.GET['strength']
         ))
 
 
-@cache_page(60 * 5)
+@cache_page(60 * 30)
 def knowledge_graph(request):
     """
     ctrl for text 2 knowledge graph
@@ -47,7 +46,6 @@ def knowledge_graph(request):
         return JsonResponse({
             "graph": service.service_knowledge_graph(
                 request.GET["text"],
-                request.GET['strength'],
-                request.GET['category']
+                request.GET['strength']
             )
         })

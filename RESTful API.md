@@ -53,7 +53,6 @@ Get the sepecific article's content and knowledge graph (in echarts' data json s
     "category": "fruit",
     "identity": "id123456",
     "strength": "Medium",
-    "categoryType": "Entity Category"
 }
 ```
 
@@ -65,7 +64,8 @@ Get the sepecific article's content and knowledge graph (in echarts' data json s
     "graph": {
         "nodes": [],
         "edges": [],
-        "categories": []
+        "classification": {},
+        "categories": {}
     }
 }
 ```
@@ -85,7 +85,6 @@ Get the Knowledge Graph of the sepecific text.
 {
     "text": "BYD debuted its E-SEED GT concept car and Song Pro SUV alongside its all-new e-series models at the Shanghai International Automobile Industry Exhibition. ",
     "strength": "Medium",
-    "category": "Entity Category"
 }
 
 ```
@@ -97,7 +96,8 @@ Get the Knowledge Graph of the sepecific text.
     "graph": {
         "nodes": [],
         "edges": [],
-        "categories": []
+        "classification": {},
+        "categories": {}
     }
 }
 ```
@@ -112,13 +112,13 @@ Get the Knowledge Graph of the sepecific text.
         {
             "name": "car",
             "value": 10,
-            "category": "category1",
+            "category": "",
             "symbolSize": 0.111
         },
         {
             "name": "store",
             "value": 30,
-            "category": "category2",
+            "category": "",
             "symbolSize": 0.222
         }
     ],
@@ -131,10 +131,26 @@ Get the Knowledge Graph of the sepecific text.
             }
         }
     ],
-    "categories": [
-        { "name": "category1" },
-        { "name": "category2" }
-    ]    
+    "classification": {
+        "entityCategory": {
+            "car": "Name",
+            "store": "Location"
+        },
+        "communitiesDetection": {
+            "car": "community 1",
+            "store": "community 2"
+        }
+    },
+    "categories": {
+        "entityCategory": [
+            { "name": "Name" },
+            { "name": "Location" }
+        ],
+        "communitiesDetection": [
+            { "name": "community 1" },
+            { "name": "community 2" }
+        ],
+    }
 }
 ```
 

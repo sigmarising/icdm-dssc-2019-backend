@@ -1,5 +1,5 @@
 import json
-import community as c
+import community as nx_c
 import networkx as nx
 from .func import text_2_triple_list
 
@@ -31,50 +31,52 @@ from .func import text_2_triple_list
 #     pass
 
 
-def triple_list_2_echarts_data_json(triple: list, category: int) -> dict:
+def triple_list_2_echarts_data_json(triple: list) -> dict:
     """
     input the triple list and convert it to echarts data json str (using networkX)
     :param triple: the triple list
-    :param category:
-        support two type:
-            1: Use Entity Category
-            2: Use Communities Detection
     :return: the json dict
     """
     # generate json string
     echarts_json = {
         "nodes": [],
         "edges": [],
-        "categories": []
+        "classification": {
+            "entityCategory": {},
+            "communitiesDetection": {}
+        },
+        "categories": {
+            "entityCategory": [],
+            "communitiesDetection": []
+        }
     }
 
     # we support DiGraph in the beginning
     graph = nx.DiGraph()
 
-    # the category list when use entity type
-    entity_types = set()
+    # the category list for two condition
+    categories_entity = set()
+    categories_community = set()
 
     # add nodes and edges
     for item in triple:
         entity_x = item["source"]
-        entity_x_type = item["sourceType"]
         entity_y = item["target"]
-        entity_y_type = item["targetType"]
         relation = item["relation"]
 
-        entity_types.add(entity_x_type)
-        entity_types.add(entity_y_type)
+        entity_x_type = item["sourceType"]
+        entity_y_type = item["targetType"]
+
+        categories_entity.add(entity_x_type)
+        categories_entity.add(entity_y_type)
+
+        echarts_json["classification"]["entityCategory"][entity_x] = entity_x_type
+        echarts_json["classification"]["entityCategory"][entity_y] = entity_y_type
 
         if not graph.has_node(entity_x):
-            if category == 1:
-                graph.add_node(entity_x, category=entity_x_type)
-            elif category == 2:
-                graph.add_node(entity_x)
+            graph.add_node(entity_x)
         if not graph.has_node(entity_y):
-            if category == 1:
-                graph.add_node(entity_y, category=entity_y_type)
-            elif category == 2:
-                graph.add_node(entity_y)
+            graph.add_node(entity_y)
         if not graph.has_edge(entity_x, entity_y):
             graph.add_edge(entity_x, entity_y, relation=relation)
 
@@ -84,33 +86,34 @@ def triple_list_2_echarts_data_json(triple: list, category: int) -> dict:
         graph.nodes[k]["pageRank"] = v
         graph.nodes[k]["degree"] = graph.degree[k]
 
-    # category of nodes
-    if category == 1:
-        entity_types = list(entity_types)
-        entity_types.sort()
-        for entity_type in entity_types:
-            echarts_json["categories"].append({
-                "name": entity_type
-            })
-    elif category == 2:
-        # communities of nodes
-        communities = c.best_partition(nx.Graph(graph))
-        for node, community in communities.items():
-            graph.nodes[node]["category"] = "community " + str(community + 1)
+    # community detection
+    communities = nx_c.best_partition(nx.Graph(graph))
+    for node, community in communities.items():
+        label = "community " + str(community + 1)
+        echarts_json["classification"]["communitiesDetection"][node] = label
+        categories_community.add(label)
 
-        # fill in categories
-        for index in list(set(communities.values())):
-            echarts_json["categories"].append({
-                "name": "community " + str(index + 1)
-            })
+    # set category in echarts json
+    categories_entity = list(categories_entity)
+    categories_entity.sort()
+    categories_community = list(categories_community)
+    categories_community.sort()
+    for entity in categories_entity:
+        echarts_json["categories"]["entityCategory"].append({
+            "name": entity
+        })
+    for entity in categories_community:
+        echarts_json["categories"]["communitiesDetection"].append({
+            "name": entity
+        })
 
     # fill in nodes info
     for node, attr in graph.nodes.items():
         echarts_json["nodes"].append({
             "name": node,
             "value": attr["degree"],
-            "category": attr["category"],
-            "symbolSize": attr["pageRank"]
+            "symbolSize": attr["pageRank"],
+            "category": ""
         })
 
     # fill in edges info
@@ -125,21 +128,17 @@ def triple_list_2_echarts_data_json(triple: list, category: int) -> dict:
     return echarts_json
 
 
-def triple_list_2_echarts_data_json_str(triple: list, category: int) -> str:
+def triple_list_2_echarts_data_json_str(triple: list) -> str:
     """
     input the triple list and convert it to echarts data json str (using networkX)
     :param triple: the triple list
-    :param category:
-        support two type:
-            1: Use Entity Category
-            2: Use Communities Detection
     :return: the json str
     """
-    json_dict = triple_list_2_echarts_data_json(triple, category)
+    json_dict = triple_list_2_echarts_data_json(triple)
     return json.dumps(json_dict, ensure_ascii=False)
 
 
-def text_2_echarts_data_json(text: str, strength: int, category: int) -> dict:
+def text_2_echarts_data_json(text: str, strength: int) -> dict:
     """
     convert text to echarts data json str
     :param text: input text
@@ -148,10 +147,6 @@ def text_2_echarts_data_json(text: str, strength: int, category: int) -> dict:
             1: weak
             2: medium
             3: strong
-    :param category:
-        support two type:
-            1: Use Entity Category
-            2: Use Communities Detection
     :return: json dict
     """
     triple_list = [
@@ -197,10 +192,10 @@ def text_2_echarts_data_json(text: str, strength: int, category: int) -> dict:
         }
     ]
     triple_list = text_2_triple_list(text, strength)
-    return triple_list_2_echarts_data_json(triple_list, category)
+    return triple_list_2_echarts_data_json(triple_list)
 
 
-def text_2_echarts_data_json_str(text: str, strength: int, category: int) -> str:
+def text_2_echarts_data_json_str(text: str, strength: int) -> str:
     """
     convert text to echarts data json str
     :param text: input text
@@ -209,10 +204,6 @@ def text_2_echarts_data_json_str(text: str, strength: int, category: int) -> str
             1: weak
             2: medium
             3: strong
-    :param category:
-        support two type:
-            1: Use Entity Category
-            2: Use Communities Detection
     :return: json str
     """
-    return json.dumps(text_2_echarts_data_json(text, strength, category), ensure_ascii=False)
+    return json.dumps(text_2_echarts_data_json(text, strength), ensure_ascii=False)

@@ -22,7 +22,7 @@ def service_article_list():
     return res
 
 
-def service_article_info(category, identity, strength, category_methond):
+def service_article_info(category, identity, strength):
     """
     find the article info in db
     :param category: industry
@@ -32,17 +32,9 @@ def service_article_info(category, identity, strength, category_methond):
             Weak: 1
             Medium: 2
             Strong: 3
-    :param category_methond:
-        convert str config to int
-            Entity Category: 1
-            Communities Detection: 2
     :return: content and graph
     """
     lookup_str = 'graph' + strength
-    if category_methond == 'Entity Category':
-        lookup_str += 'Et'
-    elif category_methond == 'Communities Detection':
-        lookup_str += 'Cd'
     lookup_str = lookup_str.lower()
 
     with transaction.atomic():
@@ -57,7 +49,7 @@ def service_article_info(category, identity, strength, category_methond):
     return res
 
 
-def service_knowledge_graph(text, strength, category_methond):
+def service_knowledge_graph(text, strength):
     """
     service for convert text to knowledge graph (in json dict)
     :param text: input text
@@ -66,10 +58,6 @@ def service_knowledge_graph(text, strength, category_methond):
             Weak: 1
             Medium: 2
             Strong: 3
-    :param category_methond:
-        convert str config to int
-            Entity Category: 1
-            Communities Detection: 2
     :return: json dict
     """
     param_strength, param_category = 0, 0
@@ -80,9 +68,4 @@ def service_knowledge_graph(text, strength, category_methond):
     elif strength == 'Strong':
         param_strength = 3
 
-    if category_methond == "Entity Category":
-        param_category = 1
-    elif category_methond == "Communities Detection":
-        param_category = 2
-
-    return text_2_echarts_data_json(text, param_strength, param_category)
+    return text_2_echarts_data_json(text, param_strength)
