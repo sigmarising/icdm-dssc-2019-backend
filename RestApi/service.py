@@ -1,7 +1,19 @@
 import json
+import functools
 from django.db import transaction
 from . import models
 from algorithm.graph import *
+
+
+def __cmp(x_data, y_data):
+    x = int(x_data)
+    y = int(y_data)
+    if x < y:
+        return -1
+    elif x == y:
+        return 0
+    elif x > y:
+        return 1
 
 
 def service_article_list():
@@ -18,7 +30,7 @@ def service_article_list():
         else:
             res[article["category"]] = [article["identity"]]
     for v in res.values():
-        v.sort()
+        v.sort(key=functools.cmp_to_key(__cmp))
     return res
 
 
