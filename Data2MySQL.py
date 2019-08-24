@@ -31,8 +31,9 @@ def main():
     cursor = db.cursor()
 
     # delete origin data
+    print("=> DELETE ORIGIN DATA", end="")
     execute_sql(db, cursor, "DELETE FROM article")
-    print("DELETE ORIGIN DATA")
+    print(" - DONE")
 
     data = pd.read_csv(DATASET_PATH)
     for index, row in data.iterrows():
@@ -42,26 +43,20 @@ def main():
             "content": str(row["content"])
         }
 
-        print("Computing - " + data_item["industry"] + ":" + data_item["index"] + " ", end="")
+        print("=> COMPUTING - " + data_item["industry"] + ":" + data_item["index"])
 
-        graph_weak_et = text_2_echarts_data_json_str(data_item["content"], 1, 1)
-        print(" 11 ", end="")
-        graph_medium_et = text_2_echarts_data_json_str(data_item["content"], 2, 1)
-        print(" 21 ", end="")
-        graph_strong_et = text_2_echarts_data_json_str(data_item["content"], 3, 1)
-        print(" 31 ", end="")
-        graph_weak_cd = text_2_echarts_data_json_str(data_item["content"], 1, 2)
-        print(" 12 ", end="")
-        graph_medium_cd = text_2_echarts_data_json_str(data_item["content"], 2, 2)
-        print(" 22 ", end="")
-        graph_strong_cd = text_2_echarts_data_json_str(data_item["content"], 3, 2)
-        print(" 32 ")
+        graph_weak = text_2_echarts_data_json_str(data_item["content"], 1)
+        print("    Weak Graph - DONE")
+        graph_medium = text_2_echarts_data_json_str(data_item["content"], 2)
+        print("    Medium Graph - DONE")
+        graph_strong = text_2_echarts_data_json_str(data_item["content"], 3)
+        print("    Strong Graph - DONE")
 
+        print("    INSERT SQL", end="")
         insert_sql = \
-            "INSERT INTO `article`(`category`, `identity`, `content`," \
-            "`graphWeakEt`, `graphMediumEt`, `graphStrongEt`," \
-            "`graphWeakCd`, `graphMediumCd`, `graphStrongCd`)" \
-            "VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            "INSERT INTO `article`(`category`, `identity`, `content`, " \
+            "`graphWeak`, `graphMedium`, `graphStrong`)" \
+            "VALUES(%s, %s, %s, %s, %s, %s)"
         execute_sql(
             db,
             cursor,
@@ -70,15 +65,12 @@ def main():
                 data_item["industry"],
                 data_item["index"],
                 data_item["content"],
-                graph_weak_et,
-                graph_medium_et,
-                graph_strong_et,
-                graph_weak_cd,
-                graph_medium_cd,
-                graph_strong_cd
+                graph_weak,
+                graph_medium,
+                graph_strong
             )
         )
-        print("DONE " + data_item["industry"] + ":" + data_item["index"])
+        print(" - DONE")
 
     # disconnect from db
     db.close()
