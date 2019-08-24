@@ -2,7 +2,7 @@ from algorithm.graph import *
 import pandas as pd
 import pymysql
 
-DATASET_PATH = './dataset/icdm_contest_data.csv'
+DATASET_PATH = './data/icdm_contest_data.csv'
 
 
 def execute_sql(db, cursor, sql, q=None):
