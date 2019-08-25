@@ -300,5 +300,5 @@ def normalize_entities(triples, syntax_triples):
         if source == target:
             continue
         new_syntax_triples.append([source, relation, target])
-    print(len(triples), len(syntax_triples))
+    # print(len(triples), len(syntax_triples))
     return triples + new_syntax_triples
