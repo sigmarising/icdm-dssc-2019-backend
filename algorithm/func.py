@@ -1,5 +1,5 @@
-from openie_utils import *
-from syntax_utils import *
+from .openie_utils import *
+from .syntax_utils import *
 from nltk.parse import CoreNLPParser
 import spacy
 import neuralcoref
