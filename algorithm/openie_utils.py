@@ -158,18 +158,27 @@ def beautify_triples(triples):
         target = triple[2]
 
         source = source.replace("-LRB-", "(").replace("-RRB-", ")").replace("( ", "(").replace(" )", ")")
-        source = source.replace(" 's", "'s").replace("s '", "s'").replace("# ", "#").replace("$ ", "$").replace(" %", "%")
-        source = source.replace("The ", "").replace("THE ", "").replace("the ", "") \
-            .replace("An ", "").replace("AN ", "").replace("an ", "") \
-            .replace("A ", "").replace("a ", "")
+        source = source.replace(" 's", "'s").replace("s '", "s'").replace("# ", "#").replace("$ ", "$").replace(" %", "%n")
+        if source.lower().startswith("the "):
+            source = source[4:]
+        if source.lower().startswith("an "):
+            source = source[3:]
+        if source.lower().startswith("a "):
+            source = source[2:]
+        source = source.replace("`` ", "\"").replace(" ''","\"").replace("` ", "'").replace(" '","'")
 
         target = target.replace("-LRB-", "(").replace("-RRB-", ")").replace("( ", "(").replace(" )", ")")
         target = target.replace(" 's", "'s").replace("s '", "s'").replace("# ", "#").replace("$ ", "$").replace(" %", "%")
-        target = target.replace("The ", "").replace("THE ", "").replace("the ", "") \
-            .replace("An ", "").replace("AN ", "").replace("an ", "") \
-            .replace("A ", "").replace("a ", "")
+        if target.lower().startswith("the "):
+            target = target[4:]
+        if target.lower().startswith("an "):
+            target = target[3:]
+        if target.lower().startswith("a "):
+            target = target[2:]
+        target = target.replace("`` ", "\"").replace(" ''","\"").replace("` ", "'").replace(" '","'")
 
         relation = relation.replace("is ", "").replace("at_time", "at")
+        relation = relation.replace("`` ", "\"").replace(" ''","\"")
 
         ret_triples.append([source, relation, target])
 
@@ -193,8 +202,11 @@ def remove_meaningless_triples(triples):
             continue
         if triple[0].strip() in ["IT", "It", "it"] or triple[2].strip() in ["IT", "It", "it"]:
             continue
-        if triple[1].strip() == "of" or triple[1].strip() == "for":
+        if triple[1].strip().lower() == "of" or triple[1].strip().lower() == "for" or triple[1].strip().lower() == "with" or triple[1].strip().lower() == "if":
             continue
+        if triple[1].lower() == "'s":
+            continue
+        triple[1] = triple[1].replace("'s", "").strip()
         ret_triples.append(triple)
     return ret_triples
 
@@ -239,7 +251,7 @@ def check_triples_by_pos(triples):
         if "NN" in relation_pos:
             if " at" in relation.lower():
                 relation = "at"
-            elif "of" not in relation.split(" "):
+            elif "of" not in relation.split(" ") and len(relation.split(" ")) > 1:
                 continue
 
         ret_triples.append([source, relation, target])
@@ -261,3 +273,23 @@ def generate_structured_triples(triples, entities, entities_labels):
                             "target":triple[2],"targetType":targetType,"relation":triple[1]})
 
     return ret_triples
+
+
+def normalize_entities(triples, syntax_triples):
+    ents = []
+    ents += [e[0] for e in triples]
+    ents += [e[2] for e in triples]
+    new_syntax_triples = []
+    for triple in syntax_triples:
+        source = triple[0]
+        relation = triple[1]
+        target = triple[2]
+        for ent in ents:
+            if source in ent or ent in source:
+                source = ent
+            if target in ent or ent in target:
+                target = ent
+        if source == target:
+            continue
+        new_syntax_triples.append([source, relation, target])
+    return triples + new_syntax_triples

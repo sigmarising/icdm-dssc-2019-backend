@@ -91,4 +91,4 @@ def parse_tree_v2(tree, triples):
         else:
             i += 1
 
-    return queue[:i+1]         # 可能返回queue的所有效果更好
+    return queue         # 可能返回queue的所有效果更好
