@@ -31,7 +31,7 @@ def text_2_triple_list(text, strength):
         json_sentence = api.api_call(sentence)
         triples += extract_triples_by_openie(json_sentence)
     syntax_triples = []
-    for sentence in syntax_triples:
+    for sentence in syntax_sentences:
         syntax_tree = list(parser.raw_parse(sentence))[0]
         cur_syntax_triples = []
         parse_tree_v2(syntax_tree, cur_syntax_triples)
@@ -50,4 +50,18 @@ def text_2_triple_list(text, strength):
 
     triples = normalize_entities(triples, syntax_triples)
     triples = remove_duplicate_triples(triples)
+
     return generate_structured_triples(triples, entities, entities_labels)
+
+# import csv
+# f = open("icdm_contest_data.csv", "r", encoding="utf-8")
+# g = open("result_5.csv", "w", encoding="utf-8")
+# reader = csv.reader(f)
+# writer = csv.writer(g)
+# for row in reader:
+#     index = row[0]
+#     text = row[1]
+#     industry = row[2]
+#     triples = text_2_triple_list(text, 1)
+#     for triple in triples:
+#         writer.writerow([industry, index] + triple)

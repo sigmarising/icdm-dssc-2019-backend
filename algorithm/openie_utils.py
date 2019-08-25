@@ -228,9 +228,17 @@ def ssplit_article_into_sentences(json_text, step):
 
 
 def remove_duplicate_triples(triples):
-    str_triples = ["|||".join(triple) for triple in triples]
-    str_triples = list(set(str_triples))
-    return [[e.strip() for e in str_triple.split("|||")] for str_triple in str_triples]
+    ret_triples = []
+    for triple in triples:
+        flag = False
+        for exist_triple in ret_triples:
+            if triple[0] == exist_triple[0] and triple[2] == exist_triple[2]:
+                flag = True
+                break
+        if not flag:
+            ret_triples.append(triple)
+
+    return ret_triples
 
 
 def check_triples_by_pos(triples):
@@ -292,4 +300,5 @@ def normalize_entities(triples, syntax_triples):
         if source == target:
             continue
         new_syntax_triples.append([source, relation, target])
+    print(len(triples), len(syntax_triples))
     return triples + new_syntax_triples
